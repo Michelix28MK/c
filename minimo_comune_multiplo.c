@@ -26,8 +26,6 @@ int main(){
         n=k;
         k=c;
     }
-    //sorting test done
-    
     //parto dal più grande
     //controllo la divisibilità reciproca
     //sommo sommo n a sestesso.
