@@ -11,7 +11,7 @@ int main()
         //printf("%d\n", val_sommato); chek dei numeri sommati
         val_sommato++;
     } while (val_sommato <= 1000);
-    printf("%s", "La somma dei primi numeri naturali da 1 a 1000 è: ");
+    printf("La somma dei primi numeri naturali da 1 a 1000 è: ");
     printf("%d\n",sommatoria);
     
     return 0;
