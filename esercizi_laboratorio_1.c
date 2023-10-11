@@ -31,7 +31,6 @@ int main (){
         printf("\nInserire il %d valore: ", i+1);
         scanf("%d", &b[i]);
     }
-    printf("\n\tsomma: %d \tsottrazione: %d \tprodotto: %d \trapporto: %d \tmodulo: %d", (b[1]+b[2]), (b[1]-b[2]), (b[1]*b[2]), (b[1]/b[2]), (b[1]%b[2]));
-     //testare a pezzi per identificare il problema
+    printf("\n\tsomma: %d \tsottrazione: %d \tprodotto: %d \trapporto: %d \tmodulo: %d", (b[0]+b[1]), (b[0]-b[1]), (b[0]*b[1]), (b[0]/b[1]), (b[0]%b[1]));
     return 0;
 }
