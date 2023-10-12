@@ -10,7 +10,7 @@
 #define SETTE (n/100)%10
 #define OTTO (n/10)%10
 #define NOVE n%10
-#define EX printf("\n%c \t%d\n", letto, n);
+#define EX printf("%c\n", letto);
 
 int main() {
     unsigned int n;
