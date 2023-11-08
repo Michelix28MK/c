@@ -3,12 +3,14 @@
 #include <string.h>
 #define DIM 8
 /**
+ * IL GIOCO DEGLI SCACCHI
+ * 
  * definisci il numero dei giocatori --> user1 = {da 1 a 16}, user1 = {da 17 a 32}
  * cella vuota bianca = 33, cella vuota nera =34
 */
 int main (){
 
-    int tavola[8][8], mn[3], turno = 0;
+    int tavola[8][8], mn[5], turno = 0;
 
     void set_tavola(int tavola[][DIM]); //utilizzabile per reset e set iniziale
     char trova_pedina(int tavola[][DIM], int numeri, int lettere);
@@ -26,6 +28,7 @@ int main (){
 
     set_tavola(tavola);
     show_tavola(tavola);
+    //da inserire funzione controllo della morte del re per terminare la partita
     next_move(tavola, &turno, mn);
 
     return 0;
@@ -33,14 +36,13 @@ int main (){
 
 void set_tavola(int tavola[][DIM]){ //azzera e pulisci i valori delle celle
 
-    for (int i = 2; i <= DIM; i++)
+    for (int i = 0; i <= DIM; i++)
     {
-        for (int j = 0; i < DIM; i++)
+        for (int j = 0; j <= DIM; j++)
         {
             tavola[i][j] = 0;
         } 
     }
-
     for (int i = 0; i < DIM; i++)
     {
         tavola[0][i]= (i+1); //imposta famiglia reale 1
@@ -99,7 +101,7 @@ char trova_pedina(int tavola[][DIM], int numeri, int lettere){
             else if (tavola[numeri][lettere]> 24 && tavola[numeri][lettere]<=32){
                 pedina = 'p';
             }else{
-                numeri+lettere % 2 ? pedina = 'w': pedina = 'b';
+                (lettere+numeri)%2? pedina = 'w': pedina = 'b';
             }
             break;
     }
@@ -109,7 +111,7 @@ char trova_pedina(int tavola[][DIM], int numeri, int lettere){
 void show_tavola(int tavola[][DIM]){ //mostra la situazione della tavola dopo ogni mossa
     char c;
     for (int i = 0; i < DIM; i++)
-    {   
+    {
         printf("\n\t|"); //apro la riga
     
         for (int j = 0; j < DIM; j++) //determina il tipo di pedina
@@ -118,37 +120,39 @@ void show_tavola(int tavola[][DIM]){ //mostra la situazione della tavola dopo og
             printf(" %c ", c);
             printf("|"); //chiudo la casella e la riga a fine ciclo
         }
-        
+        printf(" %d ", i+1);
     }
+    printf("\n\t  A   B   C   D   E   F   G   H");
 }
 
 void next_move(int tavola[][DIM], int *numero_giocatore, int numeri[]){
-    char conferma, pedina, lettere_tavola[8] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
-    int lettere[1];
-    do
-    {
-        printf("\n\nIl %d giocatore definisca la mossa da fare\n\n seleziona la pedina da spostare [lettera posizione][numero posizione]: ", *numero_giocatore+1);
-        scanf("%c%d",&lettere[0], &numeri[0]);
-        getchar();//buttare l'invio
-        printf("seleziona la nuova posizione della pedina[lettera nuova posizione][numero nuova posizione]: ");
-        scanf("%c%d - %c%d", &lettere[1], &numeri[1]);
-        getchar();//butto l'invio
 
-        for (int j = 0; j < 2; j++)
+    char conferma, pedina, lettere[2], lettere_tavola[8] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+    do
+    {   
+        printf("\n\nIl %d giocatore definisca la mossa da fare\n\nseleziona la pedina da spostare e seleziona la nuova posizione della pedina [lettera posizione][numero posizione] [lettera nuova posizione][numero nuova posizione]: ", *numero_giocatore+1);
+        scanf("%c%d %c%d",&lettere[0], &numeri[0], &lettere[1], &numeri[1]); //raccoglie la mossa
+        getchar();
+
+        for (int i = 0; i < 3; i++)
         {
-            for (int i = 0; i <= strlen(lettere_tavola) ; i++)
+            for (int j = 0; j < strlen(lettere_tavola); j++)
             {
-                lettere[j] == lettere_tavola[i] ?/*da inserire alternativa*/:numeri[2+j]=i;
+                if(lettere[i] == lettere_tavola[j])
+                    numeri[2+i] = j;
             }
         }
-        pedina = trova_pedina(tavola, numeri[0], numeri[2]);
+        pedina = trova_pedina(tavola, numeri[0]-1, numeri[2]);
         
         printf("la tua mossa è spostare %c in  %c%d(y/n): ", pedina, lettere[1], numeri[1]);
         scanf("%c", &conferma);
+        getchar();
 
     }while (conferma != 'y');
     
 }
+
+
 //identifica tipo movimenti e mosse accettabili
 /*
 void move_pedone(int posX, int posY, int utente, int pos1X, int pos1Y);
