@@ -19,15 +19,14 @@ int main (){
     void show_tavola(int tavola[][DIM]); // mostra a schermo la situzione sulla tavola
 
     void next_move(int tavola[][DIM], int *turno);
-    /*
+
     void move_pedone();
     void move_re();
     void move_regina();
     void move_torre();
     void move_cavallo();
-    void move_fante();
+    void move_alfiere();
     void clear_cella();
-    */
 
     set_tavola(tavola);
     show_tavola(tavola);
@@ -140,9 +139,9 @@ void next_move(int tavola[][DIM], int *numero_giocatore){
         scanf("%c%d %c%d",&lettera[0], &numeri[0], &lettera[1], &numeri[1]); //raccoglie la mossa
         getchar();
 
-        for (int i = 0; i < strlen(lettera)-1; i++) //trovo l'indice della lettera
+        for (int i = 0; i < sizeof(lettera); i++) //trovo l'indice della lettera
         {
-            for (int j = 0; j < strlen(lettere_tavola)-1; j++)
+            for (int j = 0; j < sizeof(lettere_tavola); j++) //ricordiamoci di non sbagliare il size of :P 
             {
                 if(lettera[i] == lettere_tavola[j]){
                     numeri[i+2] = j;
@@ -152,21 +151,55 @@ void next_move(int tavola[][DIM], int *numero_giocatore){
         }
         pedina = trova_pedina(tavola, numeri[0]-1, numeri[2]);
         
-        printf("la tua mossa è spostare %c in  %c%d(y/n): ", pedina, lettera[1], numeri[1]);
+        printf("la tua mossa è spostare %c in  %c%d (y/n): ", pedina, lettera[1], numeri[1]);
         scanf("%c", &conferma);
         getchar();
 
     }while (conferma != 'y');
-    
+
+    switch (pedina)
+    {
+    case 't':
+    case 'T':
+        move_torre(tavola, numeri[0]-1, numeri[2], numero_giocatore, numeri[1]-1, numeri[3]);
+        break;
+    case 'c':
+    case 'C':
+        move_cavallo(tavola, numeri[0]-1, numeri[2], numero_giocatore, numeri[1]-1, numeri[3]);
+        break;
+    case 'a':
+    case 'A':
+        move_alfiere(tavola, numeri[0]-1, numeri[2], numero_giocatore, numeri[1]-1, numeri[3]);
+        break;
+    case 'q':
+    case 'Q':
+        move_regina(tavola, numeri[0]-1, numeri[2], numero_giocatore, numeri[1]-1, numeri[3]);
+        break;
+    case 'k':
+    case 'K':
+        move_re(tavola, numeri[0]-1, numeri[2], numero_giocatore, numeri[1]-1, numeri[3]);
+        break;
+    default:
+        break;
+    }
 }
-
-
 //identifica tipo movimenti e mosse accettabili
-/*
-void move_pedone(int posX, int posY, int utente, int pos1X, int pos1Y);
-void move_re(int posX, int posY, int utente, int pos1X, int pos1Y);
-void move_regina(int posX, int posY, int utente, int pos1X, int pos1Y);
-void move_torre(int posX, int posY, int utente, int pos1X, int pos1Y);
-void move_cavallo(int posX, int posY, int utente, int pos1X, int pos1Y);
-void move_fante(int posX, int posY, int utente, int pos1X, int pos1Y);
-*/
+
+void move_pedone(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+
+}
+void move_re(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+
+}
+void move_regina(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+
+}
+void move_torre(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+
+}
+void move_cavallo(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+
+}
+void move_alfiere(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+
+}
