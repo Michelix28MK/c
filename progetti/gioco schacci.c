@@ -13,9 +13,12 @@ int main (){
     int tavola[8][8], mn[5], turno = 0;
 
     void set_tavola(int tavola[][DIM]); //utilizzabile per reset e set iniziale
+
     char trova_pedina(int tavola[][DIM], int numeri, int lettere);
+
     void show_tavola(int tavola[][DIM]); // mostra a schermo la situzione sulla tavola
-    void next_move(int tavola[][DIM], int *turno, int numeri[]);
+
+    void next_move(int tavola[][DIM], int *turno);
     /*
     void move_pedone();
     void move_re();
@@ -29,29 +32,29 @@ int main (){
     set_tavola(tavola);
     show_tavola(tavola);
     //da inserire funzione controllo della morte del re per terminare la partita
-    next_move(tavola, &turno, mn);
+    next_move(tavola, &turno);
 
     return 0;
 }
 
-void set_tavola(int tavola[][DIM]){ //azzera e pulisci i valori delle celle
-
-    for (int i = 0; i <= DIM; i++)
+void set_tavola(int tavola[][DIM]){
+    for (int i = 0; i <= DIM; i++) //azzera la memoria
     {
         for (int j = 0; j <= DIM; j++)
         {
             tavola[i][j] = 0;
         } 
     }
-    for (int i = 0; i < DIM; i++)
+    for (int i = 0; i < DIM; i++) //posiziona le pedine
     {
         tavola[0][i]= (i+1); //imposta famiglia reale 1
-        tavola[7][i]= (i+17); //imposta famiglai reale 2
         tavola[1][i]= (i+9); //imposta pedoni 1
+        tavola[7][i]= (i+17); //imposta famiglai reale 2
         tavola[6][i]= (i+25); //imposta pedoni 2
     }
     printf("la tavola e\' stata impostata per una nuova partita:\n ");
 }
+
 char trova_pedina(int tavola[][DIM], int numeri, int lettere){
     char pedina;
     switch (tavola[numeri][lettere])
@@ -80,13 +83,13 @@ char trova_pedina(int tavola[][DIM], int numeri, int lettere){
         case 6:
             pedina = 'A';
             break;
-        case 21:
+        case 21: //re
             pedina = 'k';
             break;
         case 4:
             pedina = 'K';
             break;
-        case 20:
+        case 20: //regina
             pedina = 'q';
             break;
         case 5:
@@ -94,20 +97,22 @@ char trova_pedina(int tavola[][DIM], int numeri, int lettere){
             break;
         
         default:
-
             if (tavola[numeri][lettere] > 8 && tavola[numeri][lettere]<=16){
                 pedina = 'P';
             }
             else if (tavola[numeri][lettere]> 24 && tavola[numeri][lettere]<=32){
                 pedina = 'p';
             }else{
-                (lettere+numeri)%2? pedina = 'w': pedina = 'b';
+                if((lettere+numeri)%2)
+                    pedina = 'w';
+                    else
+                    pedina = 'b';
             }
             break;
     }
-
     return pedina;
 }
+
 void show_tavola(int tavola[][DIM]){ //mostra la situazione della tavola dopo ogni mossa
     char c;
     for (int i = 0; i < DIM; i++)
@@ -125,26 +130,29 @@ void show_tavola(int tavola[][DIM]){ //mostra la situazione della tavola dopo og
     printf("\n\t  A   B   C   D   E   F   G   H");
 }
 
-void next_move(int tavola[][DIM], int *numero_giocatore, int numeri[]){
-
-    char conferma, pedina, lettere[2], lettere_tavola[8] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+void next_move(int tavola[][DIM], int *numero_giocatore){
+    
+    int numeri[4] = {0,0,0,0};
+    char lettera[2]={'x', 'y'}, lettere_tavola[8] = {"ABCDEFGH"}, pedina,  conferma;
     do
-    {   
-        printf("\n\nIl %d giocatore definisca la mossa da fare\n\nseleziona la pedina da spostare e seleziona la nuova posizione della pedina [lettera posizione][numero posizione] [lettera nuova posizione][numero nuova posizione]: ", *numero_giocatore+1);
-        scanf("%c%d %c%d",&lettere[0], &numeri[0], &lettere[1], &numeri[1]); //raccoglie la mossa
+    { 
+        printf("\n\nIl %d giocatore definisca la mossa da fare\n\nSeleziona la pedina da spostare e seleziona la nuova posizione della pedina [lettera posizione][numero posizione] [lettera nuova posizione][numero nuova posizione]: ", *numero_giocatore+1);
+        scanf("%c%d %c%d",&lettera[0], &numeri[0], &lettera[1], &numeri[1]); //raccoglie la mossa
         getchar();
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < strlen(lettera)-1; i++) //trovo l'indice della lettera
         {
-            for (int j = 0; j < strlen(lettere_tavola); j++)
+            for (int j = 0; j < strlen(lettere_tavola)-1; j++)
             {
-                if(lettere[i] == lettere_tavola[j])
-                    numeri[2+i] = j;
+                if(lettera[i] == lettere_tavola[j]){
+                    numeri[i+2] = j;
+                    //printf("\n per la lettera %c = %c",lettera[i], lettere_tavola[j]);
+                }
             }
         }
         pedina = trova_pedina(tavola, numeri[0]-1, numeri[2]);
         
-        printf("la tua mossa è spostare %c in  %c%d(y/n): ", pedina, lettere[1], numeri[1]);
+        printf("la tua mossa è spostare %c in  %c%d(y/n): ", pedina, lettera[1], numeri[1]);
         scanf("%c", &conferma);
         getchar();
 
