@@ -20,7 +20,7 @@ int main() {
             break;
 
         case '/':
-            printf("= %f", a/b);
+            b==0?printf("scarabottolo non approva la tua scelta peccaminosa, confessati davanti all LC2"):printf("= %f", a/b);
             break;
         default:
             printf("operatore errato! \n"); 
