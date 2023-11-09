@@ -185,8 +185,38 @@ void next_move(int tavola[][DIM], int *numero_giocatore){
 }
 //identifica tipo movimenti e mosse accettabili
 
-void move_pedone(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+void move_pedone(int tavola[][DIM], int posY, int posX, int utente, int pos1Y, int pos1X){
+    /**
+     * REGOLE DI MOVIMENTO
+     * può andare solo in avanti
+     * alla prima mossa può spostarsi di 2 a tutte le altre può spostarsi di 1
+     * può mangiare solo in diagonale di 1
+    */
+    if (utente)
+    {       // pedine a disposizione dalla 25 alla 32
+        
+    }else{ //pedine a disposizione dalla 9 alla 16 alla 
+        //determino se la posizione davanti è libera
+        int primo_spostamento_Y = (posY == 1);
+        int spostamento_Y_singolo_valido = (pos1Y - posY > 0) && (pos1Y - posY < 2); //spostamento in avanti standard
+        int spostamento_X_valido = (pos1X - posX < 2) && (pos1X - posX > -2);//spostamento laterale da -1 e +1
+        int spostamento_X_nullo = (pos1Y - posY == 0);
+        int cella_frontale_libera = !tavola[pos1Y][pos1X]; //se libera restituisce 1 se occupata restituisce 0| sistemare il metodo di controllo
+        int cella_DX_libera = !tavola[pos1Y][posX+1];
+        int cella_SX_libera = !tavola[pos1Y][posX-1];
 
+        if (spostamento_Y_singolo_valido && cella_frontale_libera && spostamento_X_nullo)
+        {   //il pedone avanza
+            tavola[pos1X][pos1Y] = tavola[posX][posY];
+            tavola[posX][posY] = 0;
+        }else if (spostamento_Y_singolo_valido && !spostamento_X_nullo && spostamento_X_valido)
+        {
+            /* code */
+        }
+        
+        
+    }
+    
 }
 void move_re(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
 
