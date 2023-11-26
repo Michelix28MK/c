@@ -5,28 +5,26 @@
 /**
  * IL GIOCO DEGLI SCACCHI
  * 
- * funzione check_re
+ * to do:
  * 
  * funzione sostituzione pedone a fine tavola!
+ * movimento torre
+ * movimento cavallo
+ * movimento alfiere
+ * fix re e trova re!
  *
-*/
-int move_re(int tavola[][DIM], int posX, int posY, int *utente, int pos1X, int pos1Y, int regina);
 
-int move_pedone(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X, int regina);
-
-void move_torre(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y, int regina);
-
-void move_regina(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y);
-/*
 void move_cavallo(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y);
 
 void move_alfiere(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y);
 */
-int main (){
+int main (void){
 
-    int tavola[DIM][DIM], turno = 0, exit = 0;
+    int tavola[DIM][DIM], turno = 0;
 
     void set_tavola(int tavola[][DIM]); //utilizzabile per reset e set iniziale
+
+    int trova_re(int tavola[][DIM], int funzione);
 
     char trova_pedina(int tavola[][DIM], int numeri, int lettere);
 
@@ -38,9 +36,10 @@ int main (){
     do
     {
         show_tavola(tavola);
-        //da inserire funzione controllo della morte del re per terminare la partita
-        exit = next_move(tavola, &turno);
-    } while (!exit);
+        next_move(tavola, &turno);
+    } while (trova_re(tavola, 1));
+
+    trova_re(tavola, 0);
 
     return 0;
 }
@@ -61,6 +60,30 @@ void set_tavola(int tavola[][DIM]){
         tavola[6][i]= (i+25); //imposta pedoni 2
     }
     printf("la tavola e\' stata impostata per una nuova partita:\n\n il giocatore 1 ha le pedine maiuscole (QK)\n");
+}
+
+int trova_re(int tavola[][DIM], int funzione){
+
+    int re1 = 0, re2 = 0, risultato;
+
+    for (int i = 0; i < DIM; i++)
+        for (int j = 0; j < DIM; j++)
+            if (tavola[i][j] == 4)
+                re1 = 1;
+            else if (tavola[i][j] == 21)
+                re2 = 1; 
+    if (funzione)    
+        if (re1 && re2)
+            risultato = 1;
+        else
+            risultato = 0;
+    else
+        if (re1)
+            printf("Il giocatore 2 Ha VINTO!");
+        else if (re2)
+            printf("Il Giocatore 1 Ha VINTO!");
+
+    return risultato;
 }
 
 char trova_pedina(int tavola[][DIM], int numeri, int lettere){
@@ -124,10 +147,10 @@ char trova_pedina(int tavola[][DIM], int numeri, int lettere){
 
 void show_tavola(int tavola[][DIM]){ //mostra la situazione della tavola dopo ogni mossa
     char c;
+    printf("\n\t     A   B   C   D   E   F   G   H\n\t    -------------------------------"); //estetica in console
     for (int i = 0; i < DIM; i++)
     {
-        printf("\n\t|"); //apro la riga
-    
+        printf("\n\t %d |", i+1); //apro la riga
         for (int j = 0; j < DIM; j++) //determina il tipo di pedina
         {   
             c = trova_pedina(tavola, i, j);
@@ -136,13 +159,22 @@ void show_tavola(int tavola[][DIM]){ //mostra la situazione della tavola dopo og
         }
         printf(" %d ", i+1);
     }
-    printf("\n\t  A   B   C   D   E   F   G   H");
+    printf("\n\t    -------------------------------\n\t     A   B   C   D   E   F   G   H");
 }
 
 int next_move(int tavola[][DIM], int *numero_giocatore){
     
     int numeri[4], exit = 0;
     char lettera[2], lettere_tavola[9] = {"ABCDEFGH"}, pedina,  conferma;
+
+    int move_re(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X, int regina);
+
+    int move_pedone(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X, int regina);
+
+    void move_torre(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X, int regina);
+
+    void move_regina(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X);
+
     do
     { 
         do
@@ -176,7 +208,7 @@ int next_move(int tavola[][DIM], int *numero_giocatore){
     case 't':
     case 'T':
         printf("\n\nspostamento torre ");
-        //move_torre(tavola, numeri[0]-1, numeri[2], numero_giocatore, numeri[1]-1, numeri[3]);
+        move_torre(tavola, numeri[0]-1, numeri[2], numero_giocatore, numeri[1]-1, numeri[3], 0);
         break;
     case 'c':
     case 'C':
@@ -268,19 +300,22 @@ int move_pedone(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, i
     return exit;
 }
 
-int move_re(int tavola[][DIM], int posX, int posY, int *utente, int pos1X, int pos1Y, int regina){
-
+int move_re(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X, int regina){
+    /**
+     * REGOLE DI MOVIMENTO
+     * 
+     * spostamento in ogni direzione di 1
+    */
     int libera_amica;
+    int exit = 0;
+    int movimento_nullo = ((pos1X -posX) == 0) && ((pos1Y - posY) == 0);
+    int spostamento_x = (pos1X - posX > -2) && (pos1X - posX < 2);
+    int spostamento_y = (pos1Y - posY > -2) && (pos1Y - posY < 2);
 
     if(*utente)
-        libera_amica = (tavola[pos1Y][pos1X]<17 && tavola[pos1Y][pos1X]>32);
+        libera_amica = ((tavola[pos1Y][pos1X]<17));
     else
-        libera_amica = (tavola[pos1Y][pos1X]<1 && tavola[pos1Y][pos1X]>16);
-
-    int exit = 0;
-    int movimento_nullo = (tavola[pos1Y][pos1X] == !tavola[posY][posX]);
-    int spostamento_x = (pos1X > posX -2) && (pos1X < posX +2);
-    int spostamento_y = (pos1Y > posY -2) && (pos1Y < posY +2);
+        libera_amica = ((tavola[pos1Y][pos1X]>16) || (tavola[pos1Y][pos1X] == 0));
     
     if (spostamento_x && spostamento_y && !movimento_nullo && libera_amica)
     {
@@ -288,21 +323,31 @@ int move_re(int tavola[][DIM], int posX, int posY, int *utente, int pos1X, int p
         tavola[posY][posX] = 0;
         *utente = !*utente;
     }else{
-        regina ? printf("\nin ricerca del movimento corretto...") : printf("Error: Mossa non valida! ripetere il turno.");
+        regina ? printf("\nin ricerca del movimento corretto...") : printf("Error: Mossa non valida! ripetere il turno.\n");
         exit = 1;
     }
     return exit;  
 }
 
-void move_regina(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
+void move_regina(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X){
+    /**
+     * REGOLE DI MOVIMENTO
+     * 
+     * spostamento del re, della torre e dell'alfiere
+    */
 
     if (move_pedone(tavola, posY, posX, utente, pos1Y, pos1X, 1) || move_re(tavola, posY, posX, utente, pos1Y, pos1X, 1))
         printf(" ");
     else
-        printf("Error: Mossa non valida! ripetere il turno.\n");
+        printf("\nError: Mossa non valida! ripetere il turno.\n");
 }
-void move_torre(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y, int regina){
-
+void move_torre(int tavola[][DIM], int posY, int posX, int *utente, int pos1Y, int pos1X, int regina){
+    /**
+     * REGOLE DI MOVIMENTO
+     * 
+     * spostamento o in verticale o in orizzontale (no diagonale)
+     * nessun limiti di celle
+    */
 }
 /*
 void move_cavallo(int tavola[][DIM], int posX, int posY, int utente, int pos1X, int pos1Y){
