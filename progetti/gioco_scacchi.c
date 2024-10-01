@@ -5,11 +5,12 @@
 /**
  * IL GIOCO DEGLI SCACCHI
  * team 1: 1T, 2C, 3A, 4K, 5Q, 6P
- * team 2: 7t, 8c, 9a, 10k, 11q 7p
+ * team 2: 7t, 8c, 9a, 10k, 11q, 7p
  */
 int main(void)
 {
-    unsigned tavola[DIM][DIM], turno = 0;
+    unsigned tavola[DIM][DIM];
+    int turno = 0;
 
     void set_tavola(unsigned tavola[][DIM]); // utilizzabile per reset e set iniziale
 
@@ -56,8 +57,8 @@ void set_tavola(unsigned tavola[][DIM])
     }
     tavola[0][4] = 4;   // re
     tavola[0][3] = 5;   // q
+    tavola[7][4] = 10; // re
     tavola[7][3] = 11;  // q
-    tavola[11][4] = 10; // re
     printf("la tavola e\' stata impostata per una nuova partita:\n\n il giocatore 1 ha le pedine MAIUSCOLE (QK)\n");
 }
 
